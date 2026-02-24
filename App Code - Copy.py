@@ -1,4 +1,3 @@
-import io
 import numpy as np
 import pandas as pd
 import streamlit as st
@@ -16,8 +15,8 @@ st.markdown(
 )
 st.markdown("**Based on the work shown in:**")
 st.markdown(
-    '- Sinha, U., Dindoruk, B., & Soliman, M. (2022). Physics Augmented Correlations and Machine Learning Methods '
-    'To Accurately Calculate Dead Oil Viscosity Based on The Available Inputs. SPE Journal. (SPE-209610-PA)'
+    "- Sinha, U., Dindoruk, B., & Soliman, M. (2022). Physics Augmented Correlations and Machine Learning Methods "
+    "To Accurately Calculate Dead Oil Viscosity Based on The Available Inputs. SPE Journal. (SPE-209610-PA)"
 )
 
 st.markdown(
@@ -32,9 +31,9 @@ st.markdown("2) Short help video (no sound): (your link here)")
 st.divider()
 
 # -----------------------------
-# Load model (exported from R)
+# Load model
 # -----------------------------
-MODEL_PATH = "Viscosity_XGB_L1out.json"
+MODEL_PATH = "Viscosity_XGB_L1out.json"  # use your converted JSON
 
 @st.cache_resource
 def load_booster(model_path: str) -> xgb.Booster:
@@ -46,39 +45,40 @@ try:
     booster = load_booster(MODEL_PATH)
 except Exception as e:
     st.error(
-        f"Could not load model from {MODEL_PATH}.\n\n"
-        f"Make sure you exported the RDS to JSON using the R script.\n\nError: {e}"
+        f"Could not load model from: {MODEL_PATH}\n\n"
+        f"Error: {e}\n\n"
+        "Tip: Ensure the model file is present next to this app (or provide a correct path)."
     )
     st.stop()
 
 # -----------------------------
-# Feature engineering (match your R code exactly)
+# Feature engineering (match R code)
 # -----------------------------
-def build_features(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.Series]:
+FEATURE_COLS = ["T", "KW", "MW", "SG", "API", "LOGAPI", "LOGT", "mult"]
+
+def build_features(df: pd.DataFrame) -> pd.DataFrame:
     """
-    This mirrors your R transformations:
+    Mirrors your R transformations:
 
-    T      <- IRIS[1:n,2]
-    MW     <- IRIS[1:n,3]
-    API    <- IRIS[1:n,4]
-    visc   <- log10(log10(IRIS[,1]+1))  # label, not used for inference unless you want evaluation
+      T      <- IRIS[1:n,2]
+      MW     <- IRIS[1:n,3]
+      API    <- IRIS[1:n,4]
 
-    SG     <- 141.5/(131.5+API)
-    KW     <- 4.5579*(MW^0.15178)*(SG^-0.84573)
-    LOGAPI <- log10(API)
-    LOGT   <- log10(T)
-    mult   <- log10(MW)/log10(API)
+      SG     <- 141.5/(131.5+API)
+      KW     <- 4.5579*(MW^0.15178)*(SG^-0.84573)
+      LOGAPI <- log10(API)
+      LOGT   <- log10(T)
+      mult   <- log10(MW)/log10(API)
 
     Features used for prediction: (T, KW, MW, SG, API, LOGAPI, LOGT, mult)
     """
     if df.shape[1] < 4:
         raise ValueError(
-            "Input CSV must have at least 4 columns, matching your Shiny assumptions:\n"
-            "col1=visc-like input, col2=T, col3=MW, col4=API"
+            "Input CSV must have at least 4 columns (positional), like your Shiny app:\n"
+            "col1=visc-like input (not used for prediction), col2=T, col3=MW, col4=API"
         )
 
     # Match R's positional indexing (R is 1-based; Python is 0-based)
-    visc_input = df.iloc[:, 0].astype(float)
     T = df.iloc[:, 1].astype(float)
     MW = df.iloc[:, 2].astype(float)
     API = df.iloc[:, 3].astype(float)
@@ -88,9 +88,6 @@ def build_features(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.Series]:
     LOGAPI = np.log10(API)
     LOGT = np.log10(T)
     mult = np.log10(MW) / np.log10(API)
-
-    # label as in R (optional)
-    label = np.log10(np.log10(visc_input + 1.0))
 
     X = pd.DataFrame(
         {
@@ -104,18 +101,16 @@ def build_features(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.Series]:
             "mult": mult,
         }
     )
-    return X, label
+
+    # Force exact order (critical for correctness)
+    return X[FEATURE_COLS]
 
 def predict_viscosity_cp(df: pd.DataFrame) -> pd.DataFrame:
-    X, _ = build_features(df)
-
-    # DMatrix like in R
+    X = build_features(df)
     dtest = xgb.DMatrix(X.to_numpy())
-
-    # predict raw y (your model appears to output the transformed label)
     y = booster.predict(dtest)
 
-    # invert transform exactly: df$Visc_predicted_cp <- 10^(10^(y))-1
+    # invert transform exactly: 10^(10^(y)) - 1
     visc_cp = (10.0 ** (10.0 ** y)) - 1.0
 
     out = df.copy()
@@ -146,7 +141,6 @@ except Exception as e:
 st.subheader("Results")
 st.dataframe(result_df, use_container_width=True)
 
-# Download button
 csv_bytes = result_df.to_csv(index=False).encode("utf-8")
 st.download_button(
     label="Download the viscosity(cp) results",
