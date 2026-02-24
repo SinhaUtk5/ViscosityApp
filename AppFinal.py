@@ -40,8 +40,15 @@ st.divider()
 # -----------------------------
 col1, col2 = st.columns(2)
 
+col1, col2 = st.columns(2)
+
+IMAGE_HEIGHT = 220  # adjust this number if you want slightly bigger/smaller
+
 with col1:
-    st.image("dindoruk_birol_2023_ns.png")
+    st.image(
+        "dindoruk_birol_2023_ns.png",
+        height=IMAGE_HEIGHT,
+    )
     st.markdown(
         """
         **Dr. Birol Dindoruk**  
@@ -52,7 +59,10 @@ with col1:
     )
 
 with col2:
-    st.image("Utk.jpeg")
+    st.image(
+        "Utk.jpeg",
+        height=IMAGE_HEIGHT,
+    )
     st.markdown(
         """
         **Utkarsh Sinha**  
@@ -168,6 +178,7 @@ if "result_df" in st.session_state:
         file_name=f"Dead_Oil_Viscosity_Results-{pd.Timestamp.today().date()}.csv",
         mime="text/csv",
     )
+
 
 
 
