@@ -19,7 +19,7 @@ st.markdown(
 )
 
 st.markdown(
-    "Calculates the Viscosity (cp) of dead oil using Molecular Weight of Stock Tank Oil (MW), API and Temperature "
+    "Calculates the Viscosity (cp) of dead oil using Molecular Weight of Stock Tank Oil (MW), API, and Temperature "
     "of Interest (°C) using XGB Method."
 )
 
@@ -141,4 +141,5 @@ if "result_df" in st.session_state:
         file_name=f"Dead_Oil_Viscosity_Results-{pd.Timestamp.today().date()}.csv",
         mime="text/csv",
     )
+
 
