@@ -8,10 +8,9 @@ st.set_page_config(page_title="UH-Viscosity Calculator", layout="wide")
 # -----------------------------
 # Title / Header
 # -----------------------------
-st.title("UH-Viscosity Calculator")
-st.subheader("A product of University of Houston")
+st.title("Dead Oil Viscosity Calculator")
 st.markdown(
-    'Department of Petroleum Engineering: "Interaction of Phase Behavior and Flow in Porous Media (IPBFPM) Consortium"'
+    'Product of Interaction of Phase-Behavior and Flow (IPB&F) Consortium'
 )
 st.markdown("**Based on the work shown in:**")
 st.markdown(
@@ -142,3 +141,4 @@ if "result_df" in st.session_state:
         file_name=f"Dead_Oil_Viscosity_Results-{pd.Timestamp.today().date()}.csv",
         mime="text/csv",
     )
+
