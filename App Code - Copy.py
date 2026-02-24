@@ -31,6 +31,33 @@ st.markdown("2) Short help video (no sound): (your link here)")
 st.divider()
 
 # -----------------------------
+# Faculty & Contributor Section
+# -----------------------------
+col1, col2 = st.columns(2)
+
+with col1:
+    st.image("Birol.jpg", use_container_width=True)
+    st.markdown(
+        """
+        **Dr. Birol Dindoruk**  
+        Professor  
+        Harold Vance Department of Petroleum Engineering,  
+        Texas A&M University
+        """
+    )
+
+with col2:
+    st.image("Utk.jpeg", use_container_width=True)
+    st.markdown(
+        """
+        **Utkarsh Sinha**  
+        Volunteer Research Associate  
+        Interaction of Phase-Behavior and Flow (IPB&F) Consortium
+        """
+    )
+
+st.divider()
+# -----------------------------
 # Load model
 # -----------------------------
 MODEL_PATH = "Viscosity_XGB_L1out.json"  # use your converted JSON
@@ -148,3 +175,4 @@ st.download_button(
     file_name=f"Dead_Oil_Viscosity_Results-{pd.Timestamp.today().date()}.csv",
     mime="text/csv",
 )
+
