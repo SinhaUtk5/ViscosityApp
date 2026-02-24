@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 import xgboost as xgb
+from pathlib import Path
+from PIL import Image
 
 st.set_page_config(page_title="UH-Viscosity Calculator", layout="wide")
 
@@ -38,17 +40,29 @@ st.divider()
 # -----------------------------
 # Faculty & Contributor Section
 # -----------------------------
-col1, col2 = st.columns(2)
+APP_DIR = Path(__file__).resolve().parent
+
+def show_resized_image(img_name: str, target_height: int):
+    img_path = APP_DIR / img_name
+    if not img_path.exists():
+        st.warning(f"Missing image: {img_name}")
+        return
+
+    img = Image.open(img_path)
+
+    # resize keeping aspect ratio, based on height
+    w, h = img.size
+    new_h = target_height
+    new_w = int(w * (new_h / h))
+    img_resized = img.resize((new_w, new_h))
+
+    st.image(img_resized)
 
 col1, col2 = st.columns(2)
-
-IMAGE_HEIGHT = 220  # adjust this number if you want slightly bigger/smaller
+TARGET_H = 200  # change to 160/180/220 as you like
 
 with col1:
-    st.image(
-        "dindoruk_birol_2023_ns.png",
-        height=IMAGE_HEIGHT,
-    )
+    show_resized_image("dindoruk_birol_2023_ns.png", TARGET_H)
     st.markdown(
         """
         **Dr. Birol Dindoruk**  
@@ -59,10 +73,7 @@ with col1:
     )
 
 with col2:
-    st.image(
-        "Utk.jpeg",
-        height=IMAGE_HEIGHT,
-    )
+    show_resized_image("Utk.jpeg", TARGET_H)
     st.markdown(
         """
         **Utkarsh Sinha**  
@@ -178,6 +189,7 @@ if "result_df" in st.session_state:
         file_name=f"Dead_Oil_Viscosity_Results-{pd.Timestamp.today().date()}.csv",
         mime="text/csv",
     )
+
 
 
 
