@@ -41,7 +41,7 @@ st.divider()
 col1, col2 = st.columns(2)
 
 with col1:
-    st.image("dindoruk_birol_2023_ns.png", use_container_width=True)
+    st.image("dindoruk_birol_2023_ns.png")
     st.markdown(
         """
         **Dr. Birol Dindoruk**  
@@ -52,7 +52,7 @@ with col1:
     )
 
 with col2:
-    st.image("Utk.jpeg", use_container_width=True)
+    st.image("Utk.jpeg")
     st.markdown(
         """
         **Utkarsh Sinha**  
@@ -168,6 +168,7 @@ if "result_df" in st.session_state:
         file_name=f"Dead_Oil_Viscosity_Results-{pd.Timestamp.today().date()}.csv",
         mime="text/csv",
     )
+
 
 
 
