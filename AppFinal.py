@@ -61,7 +61,7 @@ def show_resized_image(img_name: str, target_height: int):
 col1, col2 = st.columns(2)
 TARGET_H = 200  # change to 160/180/220 as you like
 
-with col1:
+with col2:
     show_resized_image("dindoruk_birol_2023_ns.png", TARGET_H)
     st.markdown(
         """
@@ -72,7 +72,7 @@ with col1:
         """
     )
 
-with col2:
+with col1:
     show_resized_image("Utk.jpeg", TARGET_H)
     st.markdown(
         """
@@ -189,6 +189,7 @@ if "result_df" in st.session_state:
         file_name=f"Dead_Oil_Viscosity_Results-{pd.Timestamp.today().date()}.csv",
         mime="text/csv",
     )
+
 
 
 
