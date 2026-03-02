@@ -153,7 +153,6 @@ def predict_viscosity_cp(df: pd.DataFrame) -> pd.DataFrame:
 # -----------------------------
 # UI
 # -----------------------------
-uploaded = st.file_uploader("Upload the input CSV file here", type=["csv"])
 
 # Keep data in session state so it persists after button clicks
 if uploaded is not None:
@@ -189,6 +188,7 @@ if "result_df" in st.session_state:
         file_name=f"Dead_Oil_Viscosity_Results-{pd.Timestamp.today().date()}.csv",
         mime="text/csv",
     )
+
 
 
 
