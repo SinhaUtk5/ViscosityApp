@@ -6,7 +6,16 @@ from pathlib import Path
 from PIL import Image
 import os
 st.set_page_config(page_title="UH-Viscosity Calculator", layout="wide")
-
+st.markdown(
+    """
+    <style>
+    html, body, [class*="css"]  {
+        font-size: 12pt;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 # --- Top logos ---------------------------------------------------------------------
 left_space, logo1, logo2, right_space = st.columns([1, 1, 1, 1])
 
