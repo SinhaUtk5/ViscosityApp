@@ -4,7 +4,7 @@ import streamlit as st
 import xgboost as xgb
 from pathlib import Path
 from PIL import Image
-
+import os
 st.set_page_config(page_title="UH-Viscosity Calculator", layout="wide")
 
 # --- Top logos ---------------------------------------------------------------------
@@ -87,7 +87,7 @@ with col1:
     st.markdown(
         """
         **Utkarsh Sinha**  
-        Volunteer Research Associate  
+        Volunteer Research Fellow  
         Interaction of Phase-Behavior and Flow (IPB&F) Consortium
         """
     )
