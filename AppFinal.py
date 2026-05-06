@@ -8,7 +8,7 @@ from PIL import Image
 st.set_page_config(page_title="UH-Viscosity Calculator", layout="wide")
 
 #----------------------------
-Add Logo of TAMU and IPB&F
+#----Add Logo of TAMU and IPB&F---
 #---------------------------------
 with logo1:
     if os.path.exists("TAMU.png"):
